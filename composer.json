@@ -12,5 +12,10 @@
             "name": "Grant Kinney",
             "email": "hi@grant.mk"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-0": {
+            "Template_Controller": ""
+        }
+    }
 }
