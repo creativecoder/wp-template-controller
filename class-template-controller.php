@@ -1,4 +1,16 @@
 <?php
+/*
+Plugin Name: Template Controller
+Plugin URI:  https://github.com/creativecoder/wp-template-controller
+Description: Separate data generation from presentation in your WordPress templates
+Version:     0.1
+Author:      Grant Kinney
+Author URI:  https://github.com/creativecoder
+License:     GPL2
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: 'template-controller'
+*/
+
 if ( ! class_exists( 'Template_Controller' ) ) {
 	/**
 	 * Parent class for passing data into template files
@@ -151,3 +163,25 @@ function get_tpl_data( $name ) {
 function tpl_data( $name ) {
 	echo esc_html(Template_Controller::get_instance()->get($name));
 }
+
+add_action( 'admin_init', function () {
+	include_once( 'WordPress-GitHub-Plugin-Updater/updater.php' );
+
+	define( 'WP_GITHUB_FORCE_UPDATE', true );
+
+	$config = array(
+		'slug' => plugin_basename(__FILE__), // this is the slug of your plugin
+		'proper_folder_name' => 'wp-template-controller', // this is the name of the folder your plugin lives in
+		'api_url' => 'https://api.github.com/repos/creativecoder/wp-template-controller', // the GitHub API url of your GitHub repo
+		'raw_url' => 'https://raw.github.com/creativecoder/wp-template-controller/master', // the GitHub raw url of your GitHub repo
+		'github_url' => 'https://github.com/creativecoder/wp-template-controller', // the GitHub url of your GitHub repo
+		'zip_url' => 'https://github.com/creativecoder/wp-template-controller/zipball/master', // the zip url of the GitHub repo
+		'sslverify' => true, // whether WP should check the validity of the SSL cert when getting an update, see https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/2 and https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/4 for details
+		'requires' => '3.0', // which version of WordPress does your plugin require?
+		'tested' => '4.4', // which version of WordPress is your plugin tested up to?
+		'readme' => 'README.md', // which file to use as the readme for the version number
+		'access_token' => '', // Access private repositories by authorizing under Appearance > GitHub Updates when this example plugin is installed
+	);
+
+	new WP_GitHub_Updater( $config );
+});
