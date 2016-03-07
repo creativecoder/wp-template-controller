@@ -34,6 +34,8 @@ if ( ! class_exists( 'Template_Controller' ) ) {
 		 */
 		protected static $data = array();
 
+		protected static $data_replace = array();
+
 		/**
 		 * Initialize class
 		 * @return void
@@ -72,7 +74,13 @@ if ( ! class_exists( 'Template_Controller' ) ) {
 		 * @return mixed        Value of data, if it exists, otherwise false
 		 */
 		public function get( $name ) {
-			return isset( self::$data[$name] ) ? self::$data[$name] : false;
+			$data = false;
+			if ( isset(self::$data_replace[$name]) ) {
+				$data = self::$data_replace[$name];
+			} else if ( isset(self::$data[$name]) ) {
+				$data = self::$data[$name];
+			}
+			return $data;
 		}
 
 		/**
@@ -104,7 +112,7 @@ if ( ! class_exists( 'Template_Controller' ) ) {
 				}
 			}
 			// Push template data out to global variable
-			$template_data = self::$data;
+			$template_data = array_merge( self::$data, self::$data_replace );
 		}
 
 		/**
@@ -115,6 +123,10 @@ if ( ! class_exists( 'Template_Controller' ) ) {
 		 */
 		protected function add( $name, $data ) {
 			self::$data[$name] = $data;
+		}
+
+		protected function replace( $name, $data ) {
+			self::$data_replace[$name] = $data;
 		}
 
 	} // end class
@@ -137,5 +149,5 @@ function get_tpl_data( $name ) {
  * @return void
  */
 function tpl_data( $name ) {
-	echo Template_Controller::get_instance()->get($name);
+	echo esc_html(Template_Controller::get_instance()->get($name));
 }
