@@ -3,7 +3,7 @@
 Plugin Name: Template Controller
 Plugin URI:  https://github.com/creativecoder/wp-template-controller
 Description: Separate data generation from presentation in your WordPress templates
-Version:     0.1.2
+Version:     0.1.3
 Author:      Grant Kinney
 Author URI:  https://github.com/creativecoder
 License:     GPL2
@@ -165,6 +165,8 @@ function tpl_data( $name ) {
 }
 
 add_action( 'admin_init', function () {
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) { return; }
+	
 	if ( ! class_exists('WP_GitHub_Updater') ) {
 		include_once( 'WordPress-GitHub-Plugin-Updater/updater.php' );
 	}
